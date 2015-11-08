@@ -223,7 +223,7 @@ enum E_VENDING_DATA
 	E_VENDING_COLOR,
 	E_VENDING_TYPE,
 	E_VENDING_ID,
-	E_VENDING_AREA
+	STREAMER_TAG_AREA E_VENDING_AREA
 }
 static g_eVendingData[MAX_MACHINES][E_VENDING_DATA];
 
@@ -274,7 +274,7 @@ stock CreateVendingMachine(modelid, Float:x, Float:y, Float:z, Float:rx, Float:r
 
 	#if defined Streamer_IncludeFileVersion
 		g_eVendingData[machineid][E_VENDING_ID]	= CreateDynamicObject(modelid, x, y, z, rx, ry, rz);
-		g_eVendingData[machineid][E_VENDING_AREA] = CreateDynamicRectangle(x, y, x+g_eVendingData[machineid][E_VENDING_RADIUS], y+g_eVendingData[machineid][E_VENDING_RADIUS]);
+		g_eVendingData[machineid][E_VENDING_AREA] = STREAMER_TAG_AREA CreateDynamicRectangle(x, y, x+g_eVendingData[machineid][E_VENDING_RADIUS], y+g_eVendingData[machineid][E_VENDING_RADIUS]);
 	#else
 		g_eVendingData[machineid][E_VENDING_ID]	= CreateObject(modelid, x, y, z, rx, ry, rz, 300.0);
 	#endif
@@ -470,9 +470,20 @@ GetXYInFrontOfVending(machineid, &Float:x, &Float:y, Float:distance)
 	x += (distance * floatsin(-a, degrees));
 	y += (distance * floatcos(-a, degrees));
 }
-#endif
 
 //------------------------------------------------------------------------------
+#else
+stock STREAMER_TAG_AREA GetVendingMachineDynamicArea(machineid)
+{
+	if(!IsValidVendingMachine(machineid))
+	{
+		return INVALID_MACHINE_ID;
+	}
+	
+	else return g_eVendingData[machineid][E_VENDING_AREA];
+}
+//------------------------------------------------------------------------------
+#endif
 
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
